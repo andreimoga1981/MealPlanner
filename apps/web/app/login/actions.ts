@@ -14,7 +14,13 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error || !data.user) return { error: "Wrong email or password.", email };
+  if (error?.code === "invalid_credentials") return { error: "Wrong email or password.", email };
+  if (error?.code === "email_not_confirmed") return { error: "This email address hasn’t been confirmed yet.", email };
+  if (error || !data.user) {
+    // Anything else is a setup or connection problem (wrong Supabase URL or key, network), not a bad password.
+    console.error("Sign-in failed:", error?.code, error?.message);
+    return { error: `Couldn’t sign in: ${error?.message ?? "no user returned"}. Check the Supabase settings.`, email };
+  }
 
   const { data: profile } = await supabase
     .from("profiles")

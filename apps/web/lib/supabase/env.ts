@@ -1,6 +1,9 @@
+// Hosting dashboards make it easy to paste a value with spaces, quotes or a trailing slash.
+const clean = (v: string | undefined) => (v ?? "").trim().replace(/^["']|["']$/g, "").trim();
+
 // NEXT_PUBLIC_* values must be referenced literally so Next can inline them in the browser bundle.
-export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-export const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
+export const SUPABASE_URL = clean(process.env.NEXT_PUBLIC_SUPABASE_URL).replace(/\/+$/, "");
+export const SUPABASE_KEY = clean(process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
 
 export const SUPABASE_CONFIGURED = Boolean(SUPABASE_URL && SUPABASE_KEY);
 
