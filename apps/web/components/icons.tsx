@@ -122,3 +122,17 @@ export const PlateIcon = (p: IconProps) => (
     <circle cx="12" cy="12" r="4.5" />
   </Icon>
 );
+
+export const UploadIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M12 15V4M7.5 8.5 12 4l4.5 4.5" />
+    <path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15" />
+  </Icon>
+);
+
+export const DownloadIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M12 4v11M7.5 10.5 12 15l4.5-4.5" />
+    <path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15" />
+  </Icon>
+);

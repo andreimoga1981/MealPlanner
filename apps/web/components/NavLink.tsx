@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-type Props = { href: string; exclude?: string; icon: React.ReactNode; children: React.ReactNode };
+type Props = { href: string; exclude?: string[]; icon: React.ReactNode; children: React.ReactNode };
 
 export function NavLink({ href, exclude, icon, children }: Props) {
   const pathname = usePathname();
-  const active = pathname.startsWith(href) && !(exclude && pathname.startsWith(exclude));
+  const active = pathname.startsWith(href) && !exclude?.some((path) => pathname.startsWith(path));
 
   return (
     <Link

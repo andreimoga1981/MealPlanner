@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { ingredientLine, recipeInputSchema, type RecipeInput } from "@meal-planner/shared";
+import { ingredientLine, recipeInputSchema, type NutritionStatus, type RecipeInput } from "@meal-planner/shared";
 import { requireAdmin } from "@/lib/auth";
 import { calculateNutrition } from "@/lib/nutrition";
 import { getRecipe } from "@/lib/recipes";
@@ -55,7 +55,7 @@ export async function saveRecipe(id: string | null, input: RecipeInput): Promise
 }
 
 /** Calls the nutrition API and stores the result. Failures are stored on the recipe, never thrown. */
-async function updateNutrition(id: string, title: string, lines: string[]) {
+async function updateNutrition(id: string, title: string, lines: string[]): Promise<NutritionStatus> {
   const result = await calculateNutrition(title, lines);
   const supabase = await createClient();
   await supabase
@@ -70,15 +70,17 @@ async function updateNutrition(id: string, title: string, lines: string[]) {
       nutrition_updated_at: new Date().toISOString(),
     })
     .eq("id", id);
+  return result.status;
 }
 
-export async function recalculateNutrition(id: string): Promise<SaveResult> {
+export async function recalculateNutrition(id: string): Promise<{ error?: string; status?: NutritionStatus }> {
   await requireAdmin();
   const recipe = await getRecipe(id);
   if (!recipe) return { error: "Recipe not found" };
 
-  await updateNutrition(id, recipe.name, recipe.ingredients.map(ingredientLine));
+  const status = await updateNutrition(id, recipe.name, recipe.ingredients.map(ingredientLine));
   revalidatePath(`/recipes/${id}`);
+  return { status };
 }
 
 export async function deleteRecipe(id: string): Promise<SaveResult> {

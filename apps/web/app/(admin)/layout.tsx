@@ -2,7 +2,7 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/auth";
 import { logout } from "../login/actions";
 import { NavLink } from "@/components/NavLink";
-import { BookIcon, LogOutIcon, LogoMark, PlusIcon } from "@/components/icons";
+import { BookIcon, LogOutIcon, LogoMark, PlusIcon, UploadIcon } from "@/components/icons";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const admin = await requireAdmin();
@@ -17,11 +17,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </Link>
 
           <nav className="flex gap-1 lg:flex-col" aria-label="Main">
-            <NavLink href="/recipes" exclude="/recipes/new" icon={<BookIcon />}>
+            <NavLink href="/recipes" exclude={["/recipes/new", "/recipes/import"]} icon={<BookIcon />}>
               My recipes
             </NavLink>
             <NavLink href="/recipes/new" icon={<PlusIcon />}>
               Add recipe
+            </NavLink>
+            <NavLink href="/recipes/import" icon={<UploadIcon />}>
+              Import recipes
             </NavLink>
           </nav>
 

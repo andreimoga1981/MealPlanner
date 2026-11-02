@@ -6,7 +6,7 @@ import { listRecipes } from "@/lib/recipes";
 import { RecipeImage } from "@/components/RecipeImage";
 import { DeleteRecipeButton } from "@/components/DeleteRecipeButton";
 import { RecipeFilters } from "@/components/RecipeFilters";
-import { ClockIcon, PencilIcon, PlusIcon } from "@/components/icons";
+import { ClockIcon, PencilIcon, PlusIcon, UploadIcon } from "@/components/icons";
 
 export const metadata: Metadata = { title: "My recipes" };
 
@@ -25,10 +25,16 @@ export default async function RecipesPage({ searchParams }: PageProps<"/recipes"
           <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">My recipes</h1>
           <p className="mt-1.5 text-muted">{resultSummary(recipes.length, search, freeFrom)}</p>
         </div>
-        <Link href="/recipes/new" className="btn-primary whitespace-nowrap">
-          <PlusIcon />
-          Add recipe
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/recipes/import" className="btn-secondary whitespace-nowrap">
+            <UploadIcon />
+            Import
+          </Link>
+          <Link href="/recipes/new" className="btn-primary whitespace-nowrap">
+            <PlusIcon />
+            Add recipe
+          </Link>
+        </div>
       </header>
 
       <RecipeFilters search={search} freeFrom={freeFrom} />
